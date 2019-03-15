@@ -1,0 +1,165 @@
+<div class="row" *ngIf="gameEngine.gameOver">
+  <div class="alert alert-secondary col-12" role="alert">
+    <div class="row">
+      <span class="float-left col-12">Game Over!</span>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="gameEngine.paused">
+  <div class="alert alert-primary col-12" role="alert">
+    <div class="row">
+      <span class="float-left col-12">Game Paused!</span>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 p-0 col-md-8 col-lg-5">
+    <div class="card">
+      <canvas #mainCanvas width="{{width}}" height="{{height}}">
+      </canvas>
+      <div style="display: none">
+        <!-- used for double buffering -->
+        <canvas #dbCanvas width="{{width}}" height="{{height}}">
+        </canvas> 
+        <audio #audioBackground loop>
+          <source src="assets/Tetris.mp3" type="audio/mp3">
+        </audio>
+      </div>
+      <div class="card-body bg-secondary">        
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-primary float-left" (click)="moveLeft()">
+            <fa-icon [icon]="faLeft"></fa-icon>
+          </button>
+          <button class="btn btn-success float-left" (click)="rotateCounterClockWise()">
+            <fa-icon [icon]="faCounterClockwise"></fa-icon>
+          </button>
+          <button class="btn btn-warning float-none" (click)="drop()">
+            <fa-icon [icon]="faDown"></fa-icon>
+          </button>
+          <button class="btn btn-success float-right" (click)="rotateClockWise()">
+            <fa-icon [icon]="faClockwise"></fa-icon>
+          </button>
+          <button class="btn btn-primary float-right" (click)="moveRight()">
+            <fa-icon [icon]="faRight"></fa-icon>
+          </button>
+        </div>        
+      </div>
+      <div class="card-footer d-md-none">
+        <div class="d-flex justify-content-between">
+          <div>
+            <label class="font-weight-bold mr-2">Level</label> <span class="text-right text-monospace">{{gameEngine.level}}</span>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-secondary" (click)="toggleMute()">
+              <fa-icon [icon]="faMuteFlag"></fa-icon>
+            </button>
+          </div>
+          <div>
+            <span class="text-right text-monospace">{{gameEngine.score}}</span> <label class="font-weight-bold ml-2">Score</label> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pl-5 d-none d-xs-none d-sm-none d-md-block col-md-4 col-lg-3">
+    <div class="row">
+      <div class="col-5 col-md-6 col-lg-5">
+        <label class="font-weight-bold">Level</label>
+      </div>
+      <div class="col-5 col-md-6 col-lg-5">
+        <p class="text-right text-monospace">{{gameEngine.level}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 col-md-6 col-lg-5">
+        <label class="font-weight-bold">Score</label>
+      </div>
+      <div class="col-5 col-md-6 col-lg-5">
+        <p class="text-right text-monospace">{{gameEngine.score}}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-10 col-md-12 col-lg-10">
+        <app-preview [shape]="nextShape"></app-preview>
+      </div>
+    </div>
+    <div class="row pt-3">
+      <div class="col-10 col-md-12 col-lg-10">
+        <button (click)="toggleMute()" class="btn btn-sm btn-secondary btn-block">
+          <fa-icon [icon]="faMuteFlag"></fa-icon> Sound
+        </button>
+      </div>
+    </div>
+    <div class="row" *ngIf="gameEngine.gameOver">
+      <div class="col-10 col-md-12 col-lg-10"> 
+        <button (click)="startNewGame()" class="btn btn-sm btn-primary btn-block">
+          <fa-icon [icon]="faPlay"></fa-icon> New Game
+        </button>
+      </div>
+    </div>
+    <div class="row" *ngIf="!gameEngine.gameOver">
+      <div class="col-10 col-md-12 col-lg-10"> 
+        <button (click)="togglePause()" class="btn btn-sm btn-primary btn-block">
+          <fa-icon [icon]="faPauseFlag"></fa-icon> Pause Game
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-10 col-md-12 col-lg-7">
+        <button type="button" class="btn btn-sm btn-primary btn-block" (click)="openModal(template)">
+          <fa-icon [icon]="faInfo"></fa-icon> Controls
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-10 col-md-12 d-lg-none d-xl-none">
+        <button type="button" class="btn btn-sm btn-primary btn-block" (click)="openTopScoreModal(topScoreTemplate)">
+          <fa-icon [icon]="faTopScore"></fa-icon> Top Scores
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="d-none d-sm-none d-md-none d-lg-block col-lg-4 ">
+    <top-score #topScore></top-score>
+  </div>
+</div>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Keyboard controls</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-start align-items-center">
+        <span class="badge badge-light badge-pill">A</span> <span class="pl-2">Left</span>            
+      </li>
+      <li class="list-group-item d-flex justify-content-start align-items-center">
+        <span class="badge badge-light badge-pill">D</span> <span class="pl-2">Right  </span>          
+      </li>
+      <li class="list-group-item d-flex justify-content-start align-items-center">
+        <span class="badge badge-light badge-pill">S</span> <span class="pl-2">Drop</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-start align-items-center">
+        <span class="badge badge-light badge-pill">[</span> <span class="pl-2">Counter-Clockwise</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-start align-items-center">
+        <span class="badge badge-light badge-pill">]</span> <span class="pl-2">Clockwise</span>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #topScoreTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Top Scores</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="topScoreModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <top-score [showHeader]="false"></top-score>
+  </div>
+</ng-template>

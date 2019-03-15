@@ -1,0 +1,42 @@
+<div class="card">
+  <div *ngIf="showHeader" class="card-header">Top Score</div>
+  <tabset>
+    <tab heading="Local" id="tabLocal">
+      <div class="p-2 d-flex justify-content-between">
+        <div>
+          <label class="font-weight-bold">Name</label>
+        </div>
+        <div>
+          <label class="font-weight-bold">Score (Level)</label>
+        </div>
+      </div>
+      <div *ngFor="let score of topScore" class="p-2 d-flex justify-content-between">
+        <div>
+          {{score.name}}
+        </div>
+
+        <div>
+          {{score.score}} ({{score.level}})
+        </div>
+      </div>
+    </tab>
+    <tab heading="Global" id=tabGlobal>
+      Coming soon!
+    </tab>
+  </tabset>
+</div>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Enter Name</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="save(nameInput.value)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-inline">
+      <input type="text" class="form-control" placeholder="Enter name" #nameInput>
+      <button class="btn btn-primary" (click)="save(nameInput.value)">Save</button>
+    </div>
+  </div>
+</ng-template>
