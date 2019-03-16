@@ -7,7 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "coverage": "ng test --watch false --code-coverage",
-    "coveralls": "cat ./coverage/ng-trix/lcov.info | ./node_modules/.bin/coveralls"
+    "coveralls": "cat ./coverage/ng-trix/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
