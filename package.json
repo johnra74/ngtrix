@@ -28,6 +28,7 @@
     "bootstrap": "^4.3.1",
     "bootswatch": "^4.3.1",
     "core-js": "^2.5.4",
+    "ng2-adsense": "^5.4.1",
     "ngx-bootstrap": "^3.2.0",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",

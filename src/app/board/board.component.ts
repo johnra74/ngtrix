@@ -32,7 +32,8 @@ export class BoardComponent implements OnInit, OnDestroy, Board {
 
   isMuted: boolean = true;
   isPaused: boolean = false;
-  
+  isMobile: boolean = false;
+
   /*
    * font-awesom for UI control icons
    */
@@ -65,6 +66,7 @@ export class BoardComponent implements OnInit, OnDestroy, Board {
   }
 
   ngOnInit() {
+    this.isMobile = (<any>window).screen.width < 640;
     this.audioPlayer = this.audioRef.nativeElement;
 
     let mainCanvas: any = this.mainCanvasRef.nativeElement;
