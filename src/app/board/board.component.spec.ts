@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-
+import { AdsenseModule } from 'ng2-adsense'
 import { faPlay, faPause, faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 
 import { BoardComponent } from './board.component';
@@ -86,7 +86,7 @@ describe('BoardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ BoardComponent, PreviewComponent, TopScoreComponent ],
-      imports: [FontAwesomeModule, ModalModule.forRoot(), TabsModule.forRoot() ]
+      imports: [FontAwesomeModule, ModalModule.forRoot(), TabsModule.forRoot(), AdsenseModule.forRoot({}) ]
     })
     .compileComponents();
   }));

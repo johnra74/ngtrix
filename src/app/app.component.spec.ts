@@ -3,6 +3,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { AdsenseModule } from 'ng2-adsense';
 
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
@@ -18,7 +19,7 @@ describe('AppComponent', () => {
         PreviewComponent,
         TopScoreComponent
       ],
-      imports: [FontAwesomeModule, ModalModule.forRoot(), TabsModule.forRoot()]
+      imports: [FontAwesomeModule, ModalModule.forRoot(), TabsModule.forRoot(), AdsenseModule.forRoot({})]
     }).compileComponents();
   }));
 
