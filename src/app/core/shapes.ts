@@ -1249,7 +1249,7 @@ export class ShapeT extends Shape {
 export class ShapeZ extends Shape {
 
   /**
-   * Create new T-Shape
+   * Create new Z-Shape
    *
    *   ( N | S )      ( E | W )
    *
@@ -1422,7 +1422,7 @@ export class ShapeZ extends Shape {
 export class ShapeS extends Shape {
 
   /**
-   * Create new T-Shape
+   * Create new S-Shape
    *
    *   ( N | S )      ( E | W )
    *
