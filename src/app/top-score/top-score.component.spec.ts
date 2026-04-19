@@ -1,5 +1,5 @@
 import { TemplateRef } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, Observer, Subscription } from 'rxjs';
 
 import { ModalModule, BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -50,7 +50,7 @@ describe('TopScoreComponent', () => {
   let modalService: MockBsModalService;
   let topScoreService: MockTopScoreService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TopScoreComponent ],
       providers: [

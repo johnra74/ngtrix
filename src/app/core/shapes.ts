@@ -131,7 +131,7 @@ export abstract class Shape {
    */
   rotateClockWise() {
     let targetRotation: Rotation = this.rotation + 1;
-    if (targetRotation === 5) { 
+    if ((targetRotation as number) === 5) {
       targetRotation = Rotation.NORTH;
     } 
 
@@ -143,7 +143,7 @@ export abstract class Shape {
    */
   rotateCounterClockWise() {
     let targetRotation: Rotation = this.rotation - 1;
-    if (targetRotation === 0) { 
+    if ((targetRotation as number) === 0) {
       targetRotation = Rotation.WEST;
     } 
 

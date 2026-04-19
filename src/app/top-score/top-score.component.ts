@@ -6,9 +6,10 @@ import { PartialObserver } from 'rxjs';
 import { Score, TopScoreService } from '../core/top-score.service';
 
 @Component({
-  selector: 'top-score',
-  templateUrl: './top-score.component.html',
-  styleUrls: ['./top-score.component.scss']
+    selector: 'top-score',
+    templateUrl: './top-score.component.html',
+    styleUrls: ['./top-score.component.scss'],
+    standalone: false
 })
 export class TopScoreComponent implements OnInit {
 

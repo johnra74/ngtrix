@@ -2,9 +2,10 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Location, Shape, Type } from '../core/shapes';
 
 @Component({
-  selector: 'app-preview',
-  templateUrl: './preview.component.html',
-  styleUrls: ['./preview.component.scss']
+    selector: 'app-preview',
+    templateUrl: './preview.component.html',
+    styleUrls: ['./preview.component.scss'],
+    standalone: false
 })
 export class PreviewComponent implements OnInit {
 
@@ -23,7 +24,7 @@ export class PreviewComponent implements OnInit {
     }
   }
 
-  @ViewChild('nextShapeCanvas') canvasRef: ElementRef;
+  @ViewChild('nextShapeCanvas', { static: true }) canvasRef: ElementRef;
 
   private nextShapeCtx: CanvasRenderingContext2D;
 
