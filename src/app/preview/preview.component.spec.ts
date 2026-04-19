@@ -50,7 +50,7 @@ class MockShape extends Shape {
     return true;
   }
 
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, _rotation?: Rotation): Location[] {
     return [];
   }
 }

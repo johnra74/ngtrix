@@ -1451,4 +1451,139 @@ describe('ShapeComponent::Location', () => {
     expect(component.getX()).toEqual(5);
     expect(component.getY()).toEqual(1);
   });
+
+  it('should set and get color', () => {
+    component.setColor('blue');
+    expect(component.getColor()).toEqual('blue');
+  });
+
+  it('should overwrite color on second setColor call', () => {
+    component.setColor('red');
+    component.setColor('green');
+    expect(component.getColor()).toEqual('green');
+  });
+});
+
+// Rotation-collision tests — verify the bug fix where rotations were checked
+// against the current footprint instead of the post-rotation footprint.
+describe('ShapeRotationCollision', () => {
+  let mockBoard: MockBoard;
+  let canvasCtx: CanvasRenderingContext2D;
+
+  beforeEach(() => {
+    mockBoard = new MockBoard();
+    mockBoard.filledCells = [];
+    canvasCtx = document.createElement('canvas').getContext('2d');
+  });
+
+  it('ShapeL: clockwise rotation should be blocked when target cells overlap filled cells', () => {
+    const shape = new ShapeL(mockBoard);
+    // Drop 5 times to move pivot to (4,5); shape is NORTH
+    for (let i = 0; i < 5; i++) shape.drop();
+
+    // EAST rotation at pivot (4,5) would place a cell at (3,5)
+    mockBoard.filledCells.push(new Location(3, 5));
+
+    const before = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+    shape.rotateClockWise();
+    const after = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+
+    for (let i = 0; i < before.length; i++) {
+      expect(after[i].x).toEqual(before[i].x);
+      expect(after[i].y).toEqual(before[i].y);
+    }
+  });
+
+  it('ShapeL: counter-clockwise rotation should be blocked when target cells overlap filled cells', () => {
+    const shape = new ShapeL(mockBoard);
+    for (let i = 0; i < 5; i++) shape.drop();
+
+    // WEST rotation at pivot (4,5) would place a cell at (5,4)
+    mockBoard.filledCells.push(new Location(5, 4));
+
+    const before = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+    shape.rotateCounterClockWise();
+    const after = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+
+    for (let i = 0; i < before.length; i++) {
+      expect(after[i].x).toEqual(before[i].x);
+      expect(after[i].y).toEqual(before[i].y);
+    }
+  });
+
+  it('ShapeJ: clockwise rotation should be blocked when target cells overlap filled cells', () => {
+    const shape = new ShapeJ(mockBoard);
+    for (let i = 0; i < 5; i++) shape.drop();
+
+    // EAST rotation at pivot (4,5) would place a cell at (3,4)
+    mockBoard.filledCells.push(new Location(3, 4));
+
+    const before = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+    shape.rotateClockWise();
+    const after = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+
+    for (let i = 0; i < before.length; i++) {
+      expect(after[i].x).toEqual(before[i].x);
+      expect(after[i].y).toEqual(before[i].y);
+    }
+  });
+
+  it('ShapeT: clockwise rotation should be blocked when target cells overlap filled cells', () => {
+    const shape = new ShapeT(mockBoard);
+    for (let i = 0; i < 5; i++) shape.drop();
+
+    // EAST rotation at pivot (4,5) would place a cell at (5,5)
+    mockBoard.filledCells.push(new Location(5, 5));
+
+    const before = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+    shape.rotateClockWise();
+    const after = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+
+    for (let i = 0; i < before.length; i++) {
+      expect(after[i].x).toEqual(before[i].x);
+      expect(after[i].y).toEqual(before[i].y);
+    }
+  });
+
+  it('ShapeI: clockwise rotation should be blocked when target cells overlap filled cells', () => {
+    const shape = new ShapeI(mockBoard);
+    for (let i = 0; i < 3; i++) shape.drop();
+
+    // EAST rotation at pivot (4,3) would extend to (6,3) and (7,3)
+    mockBoard.filledCells.push(new Location(6, 3));
+
+    const before = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+    shape.rotateClockWise();
+    const after = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+
+    for (let i = 0; i < before.length; i++) {
+      expect(after[i].x).toEqual(before[i].x);
+      expect(after[i].y).toEqual(before[i].y);
+    }
+  });
+
+  it('ShapeZ: clockwise rotation should succeed when no collision', () => {
+    const shape = new ShapeZ(mockBoard);
+    for (let i = 0; i < 5; i++) shape.drop();
+
+    const before = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+    shape.rotateClockWise();
+    const after = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+
+    // At least one cell should have moved
+    const changed = after.some((c, i) => c.x !== before[i].x || c.y !== before[i].y);
+    expect(changed).toBeTruthy();
+  });
+
+  it('ShapeS: clockwise rotation should succeed when no collision', () => {
+    const shape = new ShapeS(mockBoard);
+    for (let i = 0; i < 5; i++) shape.drop();
+
+    const before = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+    shape.rotateClockWise();
+    const after = shape.getCells().map(c => ({ x: c.getX(), y: c.getY() }));
+
+    const changed = after.some((c, i) => c.x !== before[i].x || c.y !== before[i].y);
+    expect(changed).toBeTruthy();
+  });
 });
