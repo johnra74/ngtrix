@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreviewComponent } from './preview.component';
 import { Board, Location, Rotation, Shape, Type, ShapeI, ShapeJ, ShapeL, ShapeO, ShapeS, ShapeT, ShapeZ } from '../core/shapes';
@@ -50,7 +50,7 @@ class MockShape extends Shape {
     return true;
   }
 
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, _rotation?: Rotation): Location[] {
     return [];
   }
 }
@@ -59,7 +59,7 @@ describe('PreviewComponent', () => {
   let component: PreviewComponent;
   let fixture: ComponentFixture<PreviewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PreviewComponent ]
     })

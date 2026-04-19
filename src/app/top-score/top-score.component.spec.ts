@@ -1,5 +1,5 @@
 import { TemplateRef } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, Observer, Subscription } from 'rxjs';
 
 import { ModalModule, BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -50,7 +50,7 @@ describe('TopScoreComponent', () => {
   let modalService: MockBsModalService;
   let topScoreService: MockTopScoreService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TopScoreComponent ],
       providers: [
@@ -65,8 +65,8 @@ describe('TopScoreComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TopScoreComponent);
     component = fixture.componentInstance;
-    modalService = TestBed.get(BsModalService);
-    topScoreService = TestBed.get(TopScoreService);
+    modalService = TestBed.inject(BsModalService) as unknown as MockBsModalService;
+    topScoreService = TestBed.inject(TopScoreService) as unknown as MockTopScoreService;
 
     fixture.detectChanges();
   });
@@ -142,5 +142,32 @@ describe('TopScoreComponent', () => {
     expect(topScoreService.saveCalled).toBeTruthy();
     expect(component.topScore.length).toEqual(10);
     expect(modalRef.hideCalled).toBeTruthy();
-  }); 
+  });
+
+  it('should use UNKNOWN when name is empty string', () => {
+    let modalRef = new MockBsModalRef();
+    component.modalRef = modalRef;
+    component.score = new Score(null, 1, 7000);
+    component.save('');
+    expect(component.score.name).toEqual('UNKNOWN');
+  });
+
+  it('should reflect showHeader input', () => {
+    component.showHeader = false;
+    fixture.detectChanges();
+    expect(component.showHeader).toBeFalsy();
+
+    component.showHeader = true;
+    fixture.detectChanges();
+    expect(component.showHeader).toBeTruthy();
+  });
+
+  it('should not open modal when score does not make top list', () => {
+    component.topScore = [
+      new Score('A', 10, 9000), new Score('B', 9, 8000), new Score('C', 8, 7000),
+      new Score('D', 7, 6000), new Score('E', 6, 5000),
+    ];
+    component.openModal(new Score(null, 1, 100));
+    expect(modalService.showCalled).toBeFalsy();
+  });
 });

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -62,7 +62,7 @@ class MockShape extends Shape {
     this.canMoveDown = canMoveDown;
   }
 
-  protected createCellsBasedOnLocation(targetLoc: Location): Location[] {
+  protected createCellsBasedOnLocation(targetLoc: Location, _rotation?: Rotation): Location[] {
     this.createCellsBasedOnLocationCalled = true;
     let cells: Location[] = [];
     cells.push(new Location(5,5));
@@ -83,7 +83,7 @@ describe('BoardComponent', () => {
   let component: BoardComponent;
   let fixture: ComponentFixture<BoardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ BoardComponent, PreviewComponent, TopScoreComponent ],
       imports: [FontAwesomeModule, ModalModule.forRoot(), TabsModule.forRoot(), AdsenseModule.forRoot({}) ]
@@ -203,6 +203,83 @@ describe('BoardComponent', () => {
     component.togglePause();
     expect(component.gameEngine.paused).toBeFalsy();
     expect(component.faPauseFlag).toEqual(faPause);
+  });
+
+  it('should not move left when paused', () => {
+    let mockShape: MockShape = new MockShape();
+    component.currentShape = mockShape;
+    component.isPaused = true;
+    component.moveLeft();
+    expect(mockShape.moveLeftCalled).toBeFalsy();
+  });
+
+  it('should not move right when paused', () => {
+    let mockShape: MockShape = new MockShape();
+    component.currentShape = mockShape;
+    component.isPaused = true;
+    component.moveRight();
+    expect(mockShape.moveRightCalled).toBeFalsy();
+  });
+
+  it('should not rotate clockwise when paused', () => {
+    let mockShape: MockShape = new MockShape();
+    component.currentShape = mockShape;
+    component.isPaused = true;
+    component.rotateClockWise();
+    expect(mockShape.rotateClockWiseCalled).toBeFalsy();
+  });
+
+  it('should not rotate counter-clockwise when paused', () => {
+    let mockShape: MockShape = new MockShape();
+    component.currentShape = mockShape;
+    component.isPaused = true;
+    component.rotateCounterClockWise();
+    expect(mockShape.rotateCounterClockWiseCalled).toBeFalsy();
+  });
+
+  it('should not drop when paused', () => {
+    let mockShape: MockShape = new MockShape();
+    component.currentShape = mockShape;
+    component.isPaused = true;
+    component.drop();
+    expect(mockShape.dropCalled).toBeFalsy();
+  });
+
+  it('should not drop when game is over', () => {
+    let mockShape: MockShape = new MockShape();
+    component.currentShape = mockShape;
+    component.gameEngine.gameOver = true;
+    component.drop();
+    expect(mockShape.dropCalled).toBeFalsy();
+  });
+
+  it('should advance to next shape when current shape completes', () => {
+    let doneShape: MockShape = new MockShape();
+    doneShape.setCanMove(false);
+    let nextShape: MockShape = new MockShape();
+    component.currentShape = doneShape;
+    component.nextShape = nextShape;
+    component.drop();
+    expect(component.currentShape).toBe(nextShape);
+  });
+
+  it('should push done shape cells to filledCells when shape completes', () => {
+    let doneShape: MockShape = new MockShape();
+    doneShape.setCanMove(false);
+    component.currentShape = doneShape;
+    component.nextShape = new MockShape();
+    component.filledCells = [];
+    component.drop();
+    expect(component.filledCells.length).toBeGreaterThan(0);
+  });
+
+  it('should not drop when game is already over before drop', () => {
+    let mockShape: MockShape = new MockShape();
+    component.currentShape = mockShape;
+    component.isPaused = false;
+    component.gameEngine.gameOver = true;
+    component.drop();
+    expect(mockShape.dropCalled).toBeFalsy();
   });
 
 });

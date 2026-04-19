@@ -10,19 +10,20 @@ import { Score } from '../core/top-score.service';
 import { TopScoreComponent } from '../top-score/top-score.component';
 
 @Component({
-  selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss']
+    selector: 'app-board',
+    templateUrl: './board.component.html',
+    styleUrls: ['./board.component.scss'],
+    standalone: false
 })
 export class BoardComponent implements OnInit, OnDestroy, Board {
 
-  @ViewChild('mainCanvas') mainCanvasRef: ElementRef;
+  @ViewChild('mainCanvas', { static: true }) mainCanvasRef: ElementRef;
   /*
    * hidden canvas for pre-drawing to improve animation (aka double-buffering)
    */
-  @ViewChild('dbCanvas') dbCanvasRef: ElementRef;
-  @ViewChild('audioBackground') audioRef: ElementRef;
-  @ViewChild('topScore') topScore: TopScoreComponent;
+  @ViewChild('dbCanvas', { static: true }) dbCanvasRef: ElementRef;
+  @ViewChild('audioBackground', { static: true }) audioRef: ElementRef;
+  @ViewChild('topScore', { static: true }) topScore: TopScoreComponent;
 
   currentShape: Shape;
   nextShape: Shape;

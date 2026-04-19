@@ -131,7 +131,7 @@ export abstract class Shape {
    */
   rotateClockWise() {
     let targetRotation: Rotation = this.rotation + 1;
-    if (targetRotation === 5) { 
+    if ((targetRotation as number) === 5) {
       targetRotation = Rotation.NORTH;
     } 
 
@@ -143,7 +143,7 @@ export abstract class Shape {
    */
   rotateCounterClockWise() {
     let targetRotation: Rotation = this.rotation - 1;
-    if (targetRotation === 0) { 
+    if ((targetRotation as number) === 0) {
       targetRotation = Rotation.WEST;
     } 
 
@@ -246,7 +246,7 @@ export abstract class Shape {
    * helper method to determin if move is valid within board's fill space
    */
   protected isValidMove(targetLoc: Location, targetRotation: Rotation) : Observable<boolean> {
-    let cells: Location[] = this.createCellsBasedOnLocation(targetLoc);
+    let cells: Location[] = this.createCellsBasedOnLocation(targetLoc, targetRotation);
     let board: Location[] = this.board.filledCells;
 
     const obs = new Observable<boolean>((observer) => {
@@ -281,7 +281,7 @@ export abstract class Shape {
    * retrieve cells for this shape - to be implemented by subclass
    * @param targetLoc - shape's pivot 
    */
-  protected abstract createCellsBasedOnLocation(targetLoc: Location): Location[];
+  protected abstract createCellsBasedOnLocation(targetLoc: Location, rotation?: Rotation): Location[];
 
   /**
    * draw shape facing north - to be implemented by subclass
@@ -381,18 +381,18 @@ export class ShapeL extends Shape {
    * retrieve cells for this shape
    * @param targetLoc - shape's pivot 
    */
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, rotation: Rotation = this.rotation): Location[] {
     let cells: Location[] = [];
     // add the pivot
     cells.push(location);
 
-    switch (this.rotation) {
+    switch (rotation) {
       case Rotation.NORTH:
         cells.push(new Location(location.getX(), location.getY() - 1));
         cells.push(new Location(location.getX(), location.getY() + 1));
         cells.push(new Location(location.getX() + 1, location.getY() + 1));
         break;
-      
+
       case Rotation.EAST:
         cells.push(new Location(location.getX() + 1, location.getY()));
         cells.push(new Location(location.getX() - 1, location.getY()));
@@ -424,11 +424,11 @@ export class ShapeL extends Shape {
   }
 
   /**
-   * draw shape facing north 
+   * draw shape facing north
    *
-   *   [1]    
-   *   [2]    
-   *   [3][4] 
+   *   [1]
+   *   [2]
+   *   [3][4]
    *
    * @param ctx - canvas 2D context to draw shape onto
    */
@@ -583,18 +583,18 @@ export class ShapeJ extends Shape {
    * retrieve cells for this shape
    * @param targetLoc - shape's pivot 
    */
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, rotation: Rotation = this.rotation): Location[] {
     let cells: Location[] = [];
     // add the pivot
     cells.push(location);
 
-    switch (this.rotation) {
+    switch (rotation) {
       case Rotation.NORTH:
         cells.push(new Location(location.getX(), location.getY() - 1));
         cells.push(new Location(location.getX(), location.getY() + 1));
         cells.push(new Location(location.getX() - 1, location.getY() + 1));
         break;
-      
+
       case Rotation.EAST:
         cells.push(new Location(location.getX() + 1, location.getY()));
         cells.push(new Location(location.getX() - 1, location.getY()));
@@ -626,11 +626,11 @@ export class ShapeJ extends Shape {
   }
 
   /**
-   * draw shape facing north 
+   * draw shape facing north
    *
-   *       [1]    
-   *       [2]    
-   *    [4][3] 
+   *       [1]
+   *       [2]
+   *    [4][3]
    *
    * @param ctx - canvas 2D context to draw shape onto
    */
@@ -779,7 +779,7 @@ export class ShapeO extends Shape {
    * retrieve cells for this shape
    * @param targetLoc - shape's pivot 
    */
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, _rotation: Rotation = this.rotation): Location[] {
     let cells: Location[] = [];
     // add the pivot
     cells.push(location);
@@ -914,12 +914,12 @@ export class ShapeI extends Shape {
    * retrieve cells for this shape
    * @param targetLoc - shape's pivot 
    */
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, rotation: Rotation = this.rotation): Location[] {
     let cells: Location[] = [];
     // add the pivot
     cells.push(location);
 
-    switch(this.rotation) {
+    switch(rotation) {
       case Rotation.NORTH:
       case Rotation.SOUTH:
         cells.push(new Location(location.getX(), location.getY() - 1));
@@ -1094,12 +1094,12 @@ export class ShapeT extends Shape {
    * retrieve cells for this shape
    * @param targetLoc - shape's pivot 
    */
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, rotation: Rotation = this.rotation): Location[] {
     let cells: Location[] = [];
     // add the pivot
     cells.push(location);
 
-    switch(this.rotation) {
+    switch(rotation) {
       case Rotation.NORTH:
         cells.push(new Location(location.getX() - 1, location.getY()));
         cells.push(new Location(location.getX() + 1, location.getY()));
@@ -1293,12 +1293,12 @@ export class ShapeZ extends Shape {
    * retrieve cells for this shape
    * @param targetLoc - shape's pivot 
    */
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, rotation: Rotation = this.rotation): Location[] {
     let cells: Location[] = [];
     // add the pivot
     cells.push(location);
 
-    switch(this.rotation) {
+    switch(rotation) {
       case Rotation.NORTH:
       case Rotation.SOUTH:
         cells.push(new Location(location.getX()-1, location.getY()));
@@ -1466,12 +1466,12 @@ export class ShapeS extends Shape {
    * retrieve cells for this shape
    * @param targetLoc - shape's pivot 
    */
-  protected createCellsBasedOnLocation(location: Location): Location[] {
+  protected createCellsBasedOnLocation(location: Location, rotation: Rotation = this.rotation): Location[] {
     let cells: Location[] = [];
     // add the pivot
     cells.push(location);
 
-    switch(this.rotation) {
+    switch(rotation) {
       case Rotation.NORTH:
       case Rotation.SOUTH:
         cells.push(new Location(location.getX() + 1, location.getY()));
